@@ -8,24 +8,19 @@
       ref="demo3"
     >
       <div
-        v-for="(item,index) in dataImgItem"
+        v-for="(item, index) in dataImgItem"
         :key="index"
         class="nut-swiper-slide"
       >
-        <img
-          :src="item.imgSrc"
-          style="width:100%;"
-        />
+        <img :src="item.imgSrc" style="width:100%;" />
       </div>
     </nut-swiper>
 
-    <nut-noticebar text="华为畅享9新品即将上市，活动期间0元预约可参与抽奖，赢HUAWEI WATCH等好礼，更多产品信息请持续关注！"></nut-noticebar>
+    <nut-noticebar
+      text="华为畅享9新品即将上市，活动期间0元预约可参与抽奖，赢HUAWEI WATCH等好礼，更多产品信息请持续关注！"
+    ></nut-noticebar>
 
-    <div
-      class="news"
-      v-for="(item ,index) in 3"
-      :key="index"
-    >
+    <div class="news" v-for="(item, index) in 3" :key="index">
       <div class="content">
         <div>
           <img
@@ -35,7 +30,8 @@
         </div>
         <div class="title">
           <div>
-            华为畅享9新品即将上市，活动期间0元预约可参与抽奖，赢HUAWEI WATCH等好礼，更多产品信
+            华为畅享9新品即将上市，活动期间0元预约可参与抽奖，赢HUAWEI
+            WATCH等好礼，更多产品信
           </div>
         </div>
       </div>
@@ -55,31 +51,32 @@ export default {
       dataImgItem: [
         {
           imgSrc:
-            "https://img2.baidu.com/it/u=3728574222,3426081649&fm=253&fmt=auto&app=120&f=JPEG?w=1200&h=675",
+            "https://img2.baidu.com/it/u=3728574222,3426081649&fm=253&fmt=auto&app=120&f=JPEG?w=1200&h=675"
         },
         {
           imgSrc:
-            "https://img0.baidu.com/it/u=3993901385,893039060&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
+            "https://img0.baidu.com/it/u=3993901385,893039060&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500"
         },
         {
           imgSrc:
-            "https://img0.baidu.com/it/u=625289032,3987615589&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=281",
+            "https://img0.baidu.com/it/u=625289032,3987615589&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=281"
         },
         {
           imgSrc:
-            "https://img2.baidu.com/it/u=3667934843,56930964&fm=253&fmt=auto&app=138&f=JPG?w=889&h=500",
-        },
-      ],
+            "https://img2.baidu.com/it/u=3667934843,56930964&fm=253&fmt=auto&app=138&f=JPG?w=889&h=500"
+        }
+      ]
     };
   },
-  methods: {},
+  created() {},
+  methods: {}
 };
 </script>
 
 <style lang="less" scoped>
 .news {
   width: 90%;
-  padding-top: 90%;
+  padding-top: 60%;
   margin: 10px 5% 0 5%;
   position: relative;
   .content {
@@ -91,6 +88,7 @@ export default {
     border-radius: 10px;
     overflow: hidden;
     background: #ddd;
+    border: 2px solid rgb(240, 243, 254);
 
     img {
       border-radius: 10px;
@@ -107,7 +105,6 @@ export default {
       font-size: 18px;
       font-weight: 800;
       padding: 10px;
-
       box-sizing: border-box;
       div {
         height: 50px;

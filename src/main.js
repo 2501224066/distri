@@ -10,9 +10,11 @@ NutUI.install(Vue);
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
-new Vue({
+let vue = new Vue({
   el: "#app",
   router,
   components: { App },
   template: "<App/>"
 });
+
+export  default vue

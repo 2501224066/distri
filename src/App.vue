@@ -21,5 +21,6 @@ export default {
 body {
   margin: 0;
   padding: 0;
+  background: rgba(248, 252, 255, 1);
 }
 </style>
