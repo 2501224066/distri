@@ -13,7 +13,9 @@
             <div
               style="font-size: 14px;font-weight: normal;margin-top: 6px;color:#666"
             >
-              暂未设置银行卡号，<span style="color:#2B86C5" @click="show = true"
+              暂未设置银行卡号，<span
+                style="color:#2B86C5"
+                @click="bandModal.show = true"
                 >点击设置</span
               >
             </div>
@@ -41,15 +43,33 @@
     </div>
 
     <div class="list">
-      <div class="item">
+      <div
+        class="item"
+        @click="
+          () => {
+            this.$router.push({ name: 'with' });
+          }
+        "
+      >
+        <div>关联用户</div>
+        <nut-icon type="right" size="20px" color="#999"> </nut-icon>
+      </div>
+      <div
+        class="item"
+        @click="
+          () => {
+            this.$router.push({ name: 'bill' });
+          }
+        "
+      >
         <div>账单</div>
         <nut-icon type="right" size="20px" color="#999"> </nut-icon>
       </div>
-      <div class="item">
+      <div class="item" @click="insertModal.show = true">
         <div>入金申请</div>
         <nut-icon type="right" size="20px" color="#999"> </nut-icon>
       </div>
-      <div class="item">
+      <div class="item" @click="outModal.show = true">
         <div>出金申请</div>
         <nut-icon type="right" size="20px" color="#999"> </nut-icon>
       </div>
@@ -57,13 +77,98 @@
 
     <div style="text-align:center;color:#2B86C5;font-size: 18px">退出登录</div>
 
-    <nut-actionsheet :is-visible="show" @close="show = !show">
+    <!-- 银行卡 -->
+    <nut-actionsheet
+      :is-visible="bandModal.show"
+      @close="bandModal.show = !bandModal.show"
+    >
       <div slot="custom" class="custom-wrap">
+        <div class="memo">银行卡设置</div>
         <div style="padding: 30px 10px 50px 10px">
           <nut-textinput
-            v-model="bandCode"
+            v-model="bandModal.code"
             label="银行卡号："
             placeholder="请输入银行卡号"
+            :has-border="false"
+          />
+          <nut-button style="margin-top:20px" block shape="circle">
+            确定
+          </nut-button>
+        </div>
+      </div>
+    </nut-actionsheet>
+
+    <!-- 入金 -->
+    <nut-actionsheet
+      :is-visible="insertModal.show"
+      @close="insertModal.show = !insertModal.show"
+    >
+      <div slot="custom" class="custom-wrap">
+        <div class="memo">入金申请</div>
+        <div style="padding: 30px 10px 50px 10px" class="insert">
+          <nut-textinput
+            type="number"
+            v-model="insertModal.num"
+            label="入金金额："
+            placeholder="请输入入金金额"
+            :has-border="false"
+          />
+
+          <div style="display: flex;margin-top:10px">
+            <div>凭证：</div>
+
+            <div class="imgs">
+              <div class="item" v-for="(item, index) in 6" :key="index"></div>
+              <div class="item"></div>
+              <nut-uploader
+                name="uploader-demo"
+                :url="insertModal.url"
+                :acceptType="['image/jpeg', 'image/png']"
+                @success="
+                  file => {
+                    this.insertModal.img = file;
+                    $toast.success('上传成功');
+                  }
+                "
+                @fail="
+                  () => {
+                    $toast.fail('上传失败！');
+                  }
+                "
+                @showMsg="
+                  () => {
+                    $toast.text(msg);
+                  }
+                "
+                typeError="对不起，不支持上传该类型文件！"
+                limitError="对不起，文件大小超过限制！"
+              >
+                <div class="add">
+                  <nut-icon type="plus" color="#999"> </nut-icon>
+                </div>
+              </nut-uploader>
+            </div>
+          </div>
+          <nut-button style="margin-top:20px" block shape="circle">
+            确定
+          </nut-button>
+        </div>
+      </div>
+    </nut-actionsheet>
+
+    <!-- 出金 -->
+    <nut-actionsheet
+      :is-visible="outModal.show"
+      @close="outModal.show = !outModal.show"
+    >
+      <div slot="custom" class="custom-wrap">
+        <div class="memo">出金申请</div>
+        <div style="padding: 30px 10px 50px 10px">
+          <nut-textinput
+            type="number"
+            v-model="outModal.num"
+            label="出金金额："
+            placeholder="请输入出金金额"
             :has-border="false"
           />
           <nut-button style="margin-top:20px" block shape="circle">
@@ -83,7 +188,22 @@ import Tabbar from "@/components/tabbar";
 export default {
   components: { Tabbar },
   data() {
-    return { show: false, bandCode: null };
+    return {
+      bandModal: {
+        show: false,
+        code: null
+      },
+      insertModal: {
+        show: false,
+        url: "https://my-json-server.typicode.com/linrufeng/demo/posts",
+        num: 999,
+        img: null
+      },
+      outModal: {
+        show: false,
+        num: 111
+      }
+    };
   },
   methods: {}
 };
@@ -150,6 +270,41 @@ export default {
     margin-bottom: 10px;
     border-radius: 10px;
     border: 2px solid rgb(240, 243, 254);
+  }
+}
+
+.memo {
+  font-size: 20px;
+  font-weight: bold;
+  padding: 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.insert {
+  .imgs {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    .item {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      background: #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .add {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+    }
   }
 }
 </style>

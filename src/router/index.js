@@ -5,6 +5,9 @@ import Promote from "@/page/promote";
 import My from "@/page/my";
 import Register from "@/page/register";
 import Login from "@/page/login";
+import Article from "@/page/article";
+import Bill from "@/page/bill";
+import With from "@/page/with";
 
 Vue.use(Router);
 
@@ -35,6 +38,21 @@ export default new Router({
       path: "/login",
       name: "login",
       component: Login
+    },
+    {
+      path: "/article",
+      name: "article",
+      component: Article
+    },
+    {
+      path: "/bill",
+      name: "bill",
+      component: Bill
+    },
+    {
+      path: "/with",
+      name: "with",
+      component: With
     }
   ]
 });

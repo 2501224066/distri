@@ -12,30 +12,46 @@
         :key="index"
         class="nut-swiper-slide"
       >
-        <img :src="item.imgSrc" style="width:100%;" />
+        <img
+          :src="item.imgSrc"
+          style="width:100%;"
+        />
       </div>
     </nut-swiper>
 
-    <nut-noticebar
-      text="华为畅享9新品即将上市，活动期间0元预约可参与抽奖，赢HUAWEI WATCH等好礼，更多产品信息请持续关注！"
-    ></nut-noticebar>
+    <nut-noticebar text="华为畅享9新品即将上市，活动期间0元预约可参与抽奖，赢HUAWEI WATCH等好礼，更多产品信息请持续关注！"></nut-noticebar>
 
-    <div class="news" v-for="(item, index) in 3" :key="index">
-      <div class="content">
-        <div>
-          <img
-            src="https://img0.baidu.com/it/u=1684794258,1103853175&fm=253&fmt=auto&app=138&f=JPEG?w=534&h=500"
-            style="width:100%;"
-          />
-        </div>
-        <div class="title">
+    <nut-infiniteloading
+      @loadmore="loadmore"
+      :has-more="true"
+      :is-loading="isLoading"
+      :is-show-mod="true"
+      :threshold="200"
+    >
+      <div
+        class="news"
+        v-for="(item, index) in int"
+        :key="index"
+      >
+        <div
+          class="content"
+          @click="toArticle()"
+        >
           <div>
-            华为畅享9新品即将上市，活动期间0元预约可参与抽奖，赢HUAWEI
-            WATCH等好礼，更多产品信
+            <img
+              src="https://img0.baidu.com/it/u=1684794258,1103853175&fm=253&fmt=auto&app=138&f=JPEG?w=534&h=500"
+              style="width:100%;"
+            />
+          </div>
+          <div class="title">
+            <div>
+              华为畅享9新品即将上市，活动期间0元预约可参与抽奖，赢HUAWEI
+              WATCH等好礼，更多产品信
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </nut-infiniteloading>
 
     <Tabbar></Tabbar>
   </div>
@@ -48,28 +64,47 @@ export default {
   components: { Tabbar },
   data() {
     return {
+      isLoading: false,
+      int: 5,
       dataImgItem: [
         {
           imgSrc:
-            "https://img2.baidu.com/it/u=3728574222,3426081649&fm=253&fmt=auto&app=120&f=JPEG?w=1200&h=675"
+            "https://img2.baidu.com/it/u=3728574222,3426081649&fm=253&fmt=auto&app=120&f=JPEG?w=1200&h=675",
         },
         {
           imgSrc:
-            "https://img0.baidu.com/it/u=3993901385,893039060&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500"
+            "https://img0.baidu.com/it/u=3993901385,893039060&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
         },
         {
           imgSrc:
-            "https://img0.baidu.com/it/u=625289032,3987615589&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=281"
+            "https://img0.baidu.com/it/u=625289032,3987615589&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=281",
         },
         {
           imgSrc:
-            "https://img2.baidu.com/it/u=3667934843,56930964&fm=253&fmt=auto&app=138&f=JPG?w=889&h=500"
-        }
-      ]
+            "https://img2.baidu.com/it/u=3667934843,56930964&fm=253&fmt=auto&app=138&f=JPG?w=889&h=500",
+        },
+      ],
     };
   },
   created() {},
-  methods: {}
+  methods: {
+    // 加载更多
+    async loadmore() {
+      this.isLoading = true;
+      this.timer = setTimeout(() => {
+        this.int += 5;
+        this.isLoading = false;
+      }, 100);
+    },
+
+    // 去咨询
+    toArticle() {
+      this.$router.push({ name: "article" });
+    },
+  },
+  destroyed() {
+    clearTimeout(this.timer);
+  },
 };
 </script>
 
