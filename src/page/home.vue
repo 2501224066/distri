@@ -6,20 +6,18 @@
       :canDragging="false"
       :paginationVisible="true"
       ref="demo3"
+      :swiperData="bannerList"
     >
       <div
-        v-for="(item, index) in dataImgItem"
+        v-for="(item, index) in bannerList"
         :key="index"
         class="nut-swiper-slide"
       >
-        <img
-          :src="item.imgSrc"
-          style="width:100%;"
-        />
+        <img :src="item.imgSrc" style="width:100%;" />
       </div>
     </nut-swiper>
 
-    <nut-noticebar text="华为畅享9新品即将上市，活动期间0元预约可参与抽奖，赢HUAWEI WATCH等好礼，更多产品信息请持续关注！"></nut-noticebar>
+    <nut-noticebar :text="notice"></nut-noticebar>
 
     <nut-infiniteloading
       @loadmore="loadmore"
@@ -28,25 +26,14 @@
       :is-show-mod="true"
       :threshold="200"
     >
-      <div
-        class="news"
-        v-for="(item, index) in int"
-        :key="index"
-      >
-        <div
-          class="content"
-          @click="toArticle()"
-        >
+      <div class="news" v-for="(item, index) in newsList" :key="index">
+        <div class="content" @click="toArticle(item.articleId)">
           <div>
-            <img
-              src="https://img0.baidu.com/it/u=1684794258,1103853175&fm=253&fmt=auto&app=138&f=JPEG?w=534&h=500"
-              style="width:100%;"
-            />
+            <img :src="item.coverImg" style="width:100%;" />
           </div>
           <div class="title">
             <div>
-              华为畅享9新品即将上市，活动期间0元预约可参与抽奖，赢HUAWEI
-              WATCH等好礼，更多产品信
+              {{ item.title }}
             </div>
           </div>
         </div>
@@ -58,6 +45,7 @@
 </template>
 
 <script>
+import { newsList, noticeList, banner } from "@/axios/api";
 import Tabbar from "@/components/tabbar";
 
 export default {
@@ -65,46 +53,66 @@ export default {
   data() {
     return {
       isLoading: false,
-      int: 5,
-      dataImgItem: [
-        {
-          imgSrc:
-            "https://img2.baidu.com/it/u=3728574222,3426081649&fm=253&fmt=auto&app=120&f=JPEG?w=1200&h=675",
-        },
-        {
-          imgSrc:
-            "https://img0.baidu.com/it/u=3993901385,893039060&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
-        },
-        {
-          imgSrc:
-            "https://img0.baidu.com/it/u=625289032,3987615589&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=281",
-        },
-        {
-          imgSrc:
-            "https://img2.baidu.com/it/u=3667934843,56930964&fm=253&fmt=auto&app=138&f=JPG?w=889&h=500",
-        },
-      ],
+      notice: "",
+      newsList: [],
+      bannerList: [],
+      page: {
+        num: 1,
+        size: 5
+      }
     };
   },
-  created() {},
+  created() {
+    this.getNoticeList();
+    this.getNewsList();
+    this.getBannerList();
+  },
   methods: {
     // 加载更多
     async loadmore() {
       this.isLoading = true;
-      this.timer = setTimeout(() => {
-        this.int += 5;
-        this.isLoading = false;
-      }, 100);
+      this.page.num += 1;
+      await this.getNewsList();
+      this.isLoading = false;
+    },
+
+    // 轮播
+    async getBannerList() {
+      let res = await banner(null, `?pageNum=1&pageSize=999`);
+      res.rows.forEach(item => {
+        item.imgSrc = item.coverImg;
+      });
+      this.bannerList = res.rows;
+    },
+
+    // 公告
+    async getNoticeList() {
+      let res = await noticeList(null, `?pageNum=1&pageSize=1`);
+      this.notice = res.rows[0].noticeTitle;
+    },
+
+    // 咨询列表
+    async getNewsList() {
+      let res = await newsList(
+        null,
+        `?pageNum=${this.page.num}&pageSize=${this.page.size}`
+      );
+      this.newsList = this.newsList.concat(res.rows);
     },
 
     // 去咨询
-    toArticle() {
-      this.$router.push({ name: "article" });
-    },
+    toArticle(id) {
+      this.$router.push({
+        name: "article",
+        query: {
+          id
+        }
+      });
+    }
   },
   destroyed() {
     clearTimeout(this.timer);
-  },
+  }
 };
 </script>
 

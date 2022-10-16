@@ -21,12 +21,13 @@
       <div class="content">
         <nut-collapse v-model="activeNames">
           <nut-collapse-item
-            v-for="(item, index) in int"
+            v-for="(item, index) in list"
             :key="index"
-            title="标题1"
+            :title="item.memberName"
             :name="index + 1"
           >
-            京东“厂直优品计划”首推“政府优品馆” 3年覆盖80%镇级政府
+            <div>注册时间：{{ item.createTime }}</div>
+            <div>联系方式：{{ item.invitPhone }}</div>
           </nut-collapse-item>
         </nut-collapse>
 
@@ -37,22 +38,39 @@
 </template>
 
 <script>
+import { withList } from "@/axios/api";
+
 export default {
   data() {
     return {
       isLoading: false,
-      int: 20,
-      activeNames: []
+      activeNames: [],
+      list: [],
+      page: {
+        num: 1,
+        size: 20
+      }
     };
+  },
+  created() {
+    this.getList();
   },
   methods: {
     // 加载更多
     async loadmore() {
       this.isLoading = true;
-      this.timer = setTimeout(() => {
-        this.int += 5;
-        this.isLoading = false;
-      }, 100);
+      this.page.num += 1;
+      this.getList();
+      this.isLoading = false;
+    },
+
+    // 账户列表
+    async getList() {
+      let res = await withList(
+        null,
+        `?pageNum=${this.page.num}&pageSize=${this.page.size}`
+      );
+      this.list = this.list.concat(res.rows);
     }
   }
 };

@@ -9,8 +9,12 @@ module.exports = {
     // Paths
     assetsSubDirectory: "static",
     assetsPublicPath: "/",
-    proxyTable: {},
-
+    proxyTable: {
+      "/jsonapi": {
+        target: "https://www.btcmsg.cn/", //目标接口域
+        changeOrigin: true //是否跨域
+      }
+    },
     // Various Dev Server settings
     host: "localhost", // can be overwritten by process.env.HOST
     port: 8000, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined

@@ -1,17 +1,19 @@
 import axios from "axios";
 import vue from "@/main.js";
 
+let load = null;
+
 // 前置拦截
 axios.interceptors.request.use(
   function(config) {
-    vue.toast.hide();
-    vue.$toast.loading(null, {
+    if (load) load.hide();
+    load = vue.$toast.loading(null, {
       duration: 0
     });
     return config;
   },
   function(error) {
-    this.toast.hide();
+    if (load) load.hide();
     return Promise.reject(error);
   }
 );
@@ -19,11 +21,11 @@ axios.interceptors.request.use(
 // 后置拦截
 axios.interceptors.response.use(
   response => {
-    vue.toast.hide();
+    if (load) load.hide();
     return response;
   },
   error => {
-    vue.toast.hide();
+    if (load) load.hide();
     return Promise.reject(error);
   }
 );

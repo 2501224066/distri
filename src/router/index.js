@@ -8,6 +8,7 @@ import Login from "@/page/login";
 import Article from "@/page/article";
 import Bill from "@/page/bill";
 import With from "@/page/with";
+import Bank from "@/page/bank";
 
 Vue.use(Router);
 
@@ -53,6 +54,11 @@ export default new Router({
       path: "/with",
       name: "with",
       component: With
+    },
+    {
+      path: "/bank",
+      name: "bank",
+      component: Bank
     }
   ]
 });

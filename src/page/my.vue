@@ -9,21 +9,14 @@
             bg-image="http://img30.360buyimg.com/uba/jfs/t1/84318/29/2102/10483/5d0704c1Eb767fa74/fc456b03fdd6cbab.png"
           ></nut-avatar>
           <div>
-            <div>野原新之助</div>
+            <div>{{ userInfo.nickname }}</div>
+
             <div
-              style="font-size: 14px;font-weight: normal;margin-top: 6px;color:#666"
+              style="font-size: 14px;font-weight: normal;margin-top: 6px;color:#2B86C5"
+              @click="bankModal.show = true"
             >
-              暂未设置银行卡号，<span
-                style="color:#2B86C5"
-                @click="bandModal.show = true"
-                >点击设置</span
-              >
+              新增账户
             </div>
-            <!--  <div
-              style="font-size: 14px;font-weight: normal;margin-top: 6px;color:#666"
-            >
-              卡号: 475635465324545
-            </div> -->
           </div>
         </div>
       </div>
@@ -31,11 +24,11 @@
       <div class="num">
         <div class="box">
           <div class="item">
-            <div>151235</div>
+            <div>{{ userInfo.balance }}</div>
             <div class="tag">本金</div>
           </div>
           <div class="item">
-            <div>1515</div>
+            <div>{{ userInfo.welfare }}</div>
             <div class="tag">收益</div>
           </div>
         </div>
@@ -47,22 +40,33 @@
         class="item"
         @click="
           () => {
-            this.$router.push({ name: 'with' });
+            this.$router.push({ name: 'bill' });
           }
         "
       >
-        <div>关联用户</div>
+        <div>账单</div>
         <nut-icon type="right" size="20px" color="#999"> </nut-icon>
       </div>
       <div
         class="item"
         @click="
           () => {
-            this.$router.push({ name: 'bill' });
+            this.$router.push({ name: 'bank' });
           }
         "
       >
-        <div>账单</div>
+        <div>账户列表</div>
+        <nut-icon type="right" size="20px" color="#999"> </nut-icon>
+      </div>
+      <div
+        class="item"
+        @click="
+          () => {
+            this.$router.push({ name: 'with' });
+          }
+        "
+      >
+        <div>关联用户</div>
         <nut-icon type="right" size="20px" color="#999"> </nut-icon>
       </div>
       <div class="item" @click="insertModal.show = true">
@@ -75,23 +79,56 @@
       </div>
     </div>
 
-    <div style="text-align:center;color:#2B86C5;font-size: 18px">退出登录</div>
+    <div
+      style="text-align:center;color:#2B86C5;font-size: 18px"
+      v-if="loginStatus"
+      @click="unLogin"
+    >
+      退出登录
+    </div>
 
-    <!-- 银行卡 -->
+    <!-- 账户 -->
     <nut-actionsheet
-      :is-visible="bandModal.show"
-      @close="bandModal.show = !bandModal.show"
+      :is-visible="bankModal.show"
+      @close="bankModal.show = !bankModal.show"
     >
       <div slot="custom" class="custom-wrap">
-        <div class="memo">银行卡设置</div>
+        <div class="memo">账户设置</div>
         <div style="padding: 30px 10px 50px 10px">
           <nut-textinput
-            v-model="bandModal.code"
-            label="银行卡号："
-            placeholder="请输入银行卡号"
+            style="margin-bottom:10px"
+            v-model="bankModal.name"
+            label="银行名称："
+            placeholder="请输入银行名称"
             :has-border="false"
           />
-          <nut-button style="margin-top:20px" block shape="circle">
+          <nut-textinput
+            style="margin-bottom:10px"
+            v-model="bankModal.code"
+            label="账户号："
+            placeholder="请输入账户号"
+            :has-border="false"
+          />
+          <nut-textinput
+            style="margin-bottom:10px"
+            v-model="bankModal.man"
+            label="持卡人："
+            placeholder="请输入持卡人"
+            :has-border="false"
+          />
+          <nut-textinput
+            style="margin-bottom:10px"
+            v-model="bankModal.remark"
+            label="备注："
+            placeholder="请输入备注"
+            :has-border="false"
+          />
+          <nut-button
+            style="margin-top:20px"
+            block
+            shape="circle"
+            @click="bankSub"
+          >
             确定
           </nut-button>
         </div>
@@ -116,27 +153,32 @@
 
           <div style="display: flex;margin-top:10px">
             <div>凭证：</div>
-
             <div class="imgs">
-              <div class="item" v-for="(item, index) in 6" :key="index"></div>
-              <div class="item"></div>
+              <div
+                class="item"
+                v-for="(item, index) in insertModal.imgs"
+                :key="index"
+              >
+                <span class="del" @click="insertModal.imgs.splice(index, 1)">
+                  ✕
+                </span>
+                <img style="width:100%" :src="item" />
+              </div>
               <nut-uploader
-                name="uploader-demo"
+                name="file"
                 :url="insertModal.url"
+                :headers="{
+                  Authorization: token
+                }"
                 :acceptType="['image/jpeg', 'image/png']"
                 @success="
-                  file => {
-                    this.insertModal.img = file;
-                    $toast.success('上传成功');
-                  }
-                "
-                @fail="
-                  () => {
-                    $toast.fail('上传失败！');
+                  (file, res) => {
+                    insertModal.imgs.push(JSON.parse(res).data);
                   }
                 "
                 @showMsg="
                   () => {
+                    this.insertModal.show = false;
                     $toast.text(msg);
                   }
                 "
@@ -149,7 +191,12 @@
               </nut-uploader>
             </div>
           </div>
-          <nut-button style="margin-top:20px" block shape="circle">
+          <nut-button
+            style="margin-top:20px"
+            block
+            shape="circle"
+            @click="insertMoney"
+          >
             确定
           </nut-button>
         </div>
@@ -163,7 +210,30 @@
     >
       <div slot="custom" class="custom-wrap">
         <div class="memo">出金申请</div>
+
         <div style="padding: 30px 10px 50px 10px">
+          <nut-textinput
+            style="margin-bottom:10px"
+            v-model="outModal.bankName"
+            label="银行名称："
+            @click="outModal.bankCodeShow = true"
+            placeholder="请输入银行名称"
+            :has-border="false"
+          />
+          <nut-textinput
+            style="margin-bottom:10px"
+            v-model="outModal.bankCode"
+            label="账户号："
+            placeholder="请输入账户号"
+            :has-border="false"
+          />
+          <nut-textinput
+            style="margin-bottom:10px"
+            v-model="outModal.bankMan"
+            label="持卡人："
+            placeholder="请输入持卡人"
+            :has-border="false"
+          />
           <nut-textinput
             type="number"
             v-model="outModal.num"
@@ -171,41 +241,184 @@
             placeholder="请输入出金金额"
             :has-border="false"
           />
-          <nut-button style="margin-top:20px" block shape="circle">
+          <nut-button
+            style="margin-top:20px"
+            block
+            shape="circle"
+            @click="outMoney"
+          >
             确定
           </nut-button>
         </div>
       </div>
     </nut-actionsheet>
 
+    <nut-picker
+      :is-visible="outModal.bankCodeShow"
+      :list-data="[pickerData]"
+      @close="outModal.bankCodeShow = false"
+      @confirm="
+        val => {
+          outModal.bankCode = this.bankList[+val[0].label].account;
+          outModal.bankName = this.bankList[+val[0].label].bank;
+          outModal.bankMan = this.bankList[+val[0].label].cardOwner;
+        }
+      "
+    ></nut-picker>
+
     <Tabbar></Tabbar>
   </div>
 </template>
 
 <script>
+import { insert, out, bankAdd, bankList, userInfo } from "@/axios/api";
 import Tabbar from "@/components/tabbar";
 
 export default {
   components: { Tabbar },
   data() {
     return {
-      bandModal: {
+      token: sessionStorage.getItem("token"),
+      loginStatus: sessionStorage.getItem("loginStatus") || false,
+      userInfo: sessionStorage.getItem("userInfo")
+        ? JSON.parse(sessionStorage.getItem("userInfo"))
+        : { nickname: "未登录", balance: 0, welfare: 0 },
+      bankModal: {
         show: false,
-        code: null
+        name: null,
+        code: null,
+        man: null,
+        remark: null
       },
       insertModal: {
         show: false,
-        url: "https://my-json-server.typicode.com/linrufeng/demo/posts",
-        num: 999,
-        img: null
+        url: "/jsonapi/recharge/upload",
+        num: null,
+        imgs: []
       },
       outModal: {
         show: false,
-        num: 111
-      }
+        bankCode: null,
+        bankName: null,
+        bankMan: null,
+        num: null,
+        bankCodeShow: false
+      },
+      pickerData: [],
+      bankList: []
     };
   },
-  methods: {}
+  created() {
+    this.loginVerify();
+  },
+  methods: {
+    // 登录校验
+    loginVerify() {
+      if (!sessionStorage.getItem("loginStatus")) {
+        this.$toast.fail("暂未登录,自动前往");
+        setTimeout(() => {
+          this.$router.push({ name: "login" });
+        }, 2000);
+        return;
+      }
+      this.getUserInfo();
+      this.getBankList();
+    },
+
+    // 用户信息
+    async getUserInfo() {
+      let res = await userInfo();
+      sessionStorage.setItem("userInfo", JSON.stringify(res.data));
+      this.userInfo = res.data;
+    },
+
+    // 退出登录
+    unLogin() {
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("loginStatus");
+      sessionStorage.removeItem("userInfo");
+      this.$toast.success("操作成功");
+      setTimeout(() => {
+        this.$router.push({ name: "home" });
+      }, 2000);
+    },
+
+    // 新增账户
+    async bankSub() {
+      if (!this.bankModal.name || !this.bankModal.code || !this.bankModal.man) {
+        this.bankModal.show = false;
+        this.$toast.fail("请将表单填写完全");
+        return;
+      }
+      await bankAdd({
+        bank: this.bankModal.name,
+        account: this.bankModal.code,
+        cardOwner: this.bankModal.man,
+        remark: this.bankModal.remark
+      });
+      this.bankModal.name = null;
+      this.bankModal.code = null;
+      this.bankModal.man = null;
+      this.bankModal.remark = null;
+      this.bankModal.show = false;
+      this.$toast.success("操作成功,可在账户列表查看");
+    },
+
+    // 账户列表
+    async getBankList() {
+      let res = await bankList(null, `?pageNum=1&pageSize=999`);
+      this.bankList = res.rows;
+      this.pickerData = res.rows.reduce((init, val, index) => {
+        init.push({
+          label: index,
+          value: `【${val.cardOwner}】${val.bank}`
+        });
+        return init;
+      }, []);
+    },
+
+    // 入金
+    async insertMoney() {
+      if (!this.insertModal.num || this.insertModal.imgs.length == 0) {
+        this.insertModal.show = false;
+        this.$toast.fail("请将表单填写完全");
+        return;
+      }
+      await insert({
+        amount: this.insertModal.num,
+        imgUrls: this.insertModal.imgs.join()
+      });
+      this.insertModal.num = null;
+      this.insertModal.imgs = [];
+      this.$toast.success("操作成功");
+    },
+
+    // 出金
+    async outMoney() {
+      if (
+        !this.outModal.num ||
+        !this.outModal.bankName ||
+        !this.outModal.bankCode ||
+        !this.outModal.bankMan
+      ) {
+        this.outModal.show = false;
+        this.$toast.fail("请将表单填写完全");
+        return;
+      }
+      await out({
+        amount: this.outModal.num,
+        bank: this.outModal.bankName,
+        account: this.outModal.bankCode,
+        payee: this.outModal.bankMan
+      });
+      this.outModal.num = null;
+      this.outModal.bankName = null;
+      this.outModal.bankCode = null;
+      this.outModal.bankMan = null;
+      this.outModal.show = false;
+      this.$toast.success("操作成功");
+    }
+  }
 };
 </script>
 
@@ -286,22 +499,39 @@ export default {
     display: flex;
     flex-wrap: wrap;
     .item {
-      width: 50px;
-      height: 50px;
+      width: 80px;
+      height: 80px;
       margin-right: 10px;
       margin-bottom: 10px;
-      background: #ddd;
+      background: #eee;
       border-radius: 4px;
+      position: relative;
       overflow: hidden;
+      top: 0;
+      left: 0;
+      .del {
+        position: absolute;
+        right: 0;
+        top: 0;
+        background: #999;
+        color: #fff;
+        font-size: 12px;
+        width: 18px;
+        display: inline-block;
+        line-height: 18px;
+        height: 18px;
+        text-align: center;
+        border-radius: 0 0 0 6px;
+      }
     }
     .add {
-      width: 50px;
-      height: 50px;
+      width: 80px;
+      height: 80px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: #ddd;
+      background: #eee;
       border-radius: 4px;
       overflow: hidden;
     }
