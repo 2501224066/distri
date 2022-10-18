@@ -142,6 +142,13 @@
     >
       <div slot="custom" class="custom-wrap">
         <div class="memo">入金申请</div>
+
+        <div class="url">
+          充值链接：<a :href="payUrl" target="_blank">
+            {{ payUrl }}
+          </a>
+        </div>
+
         <div style="padding: 30px 10px 50px 10px" class="insert">
           <nut-textinput
             type="number"
@@ -259,9 +266,13 @@
       @close="outModal.bankCodeShow = false"
       @confirm="
         val => {
-          outModal.bankCode = this.bankList[+val[0].label].account;
-          outModal.bankName = this.bankList[+val[0].label].bank;
-          outModal.bankMan = this.bankList[+val[0].label].cardOwner;
+          let key = 0;
+          if (val.length != 0) {
+            key = +val[0].label;
+          }
+          outModal.bankCode = this.bankList[key].account;
+          outModal.bankName = this.bankList[key].bank;
+          outModal.bankMan = this.bankList[key].cardOwner;
         }
       "
     ></nut-picker>
@@ -271,7 +282,7 @@
 </template>
 
 <script>
-import { insert, out, bankAdd, bankList, userInfo } from "@/axios/api";
+import { insert, out, bankAdd, bankList, userInfo, setting } from "@/axios/api";
 import Tabbar from "@/components/tabbar";
 
 export default {
@@ -305,10 +316,11 @@ export default {
         bankCodeShow: false
       },
       pickerData: [],
-      bankList: []
+      bankList: [],
+      payUrl: null
     };
   },
-  created() {
+  mounted() {
     this.loginVerify();
   },
   methods: {
@@ -323,6 +335,12 @@ export default {
       }
       this.getUserInfo();
       this.getBankList();
+      this.getSetting();
+    },
+
+    async getSetting() {
+      let res = await setting();
+      this.payUrl = res.payUrl;
     },
 
     // 用户信息
@@ -536,5 +554,15 @@ export default {
       overflow: hidden;
     }
   }
+}
+
+.url {
+  background: #fff;
+  padding: 10px;
+  box-sizing: border-box;
+  width: 94%;
+  margin: 10px 3%;
+  border-radius: 10px;
+  border: 2px solid rgb(240, 243, 254);
 }
 </style>

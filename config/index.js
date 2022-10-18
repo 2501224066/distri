@@ -11,7 +11,7 @@ module.exports = {
     assetsPublicPath: "/",
     proxyTable: {
       "/jsonapi": {
-        target: "https://www.btcmsg.cn/", //目标接口域
+        target: "http://43.159.53.31", //目标接口域
         changeOrigin: true //是否跨域
       }
     },

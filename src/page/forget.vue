@@ -5,9 +5,9 @@
       &nbsp;
     </nut-navbar>
 
-    <div class="register">
+    <div class="forget">
       <div class="title">
-        注册
+        重置密码
       </div>
 
       <div class="content">
@@ -31,9 +31,9 @@
         </div>
         <div class="item">
           <nut-textinput
-            placeholder="请输入密码"
+            placeholder="请输入新密码"
             v-model="pwd"
-            label="密码"
+            label="新密码"
             maxlength="10"
             type="password"
             :has-border="false"
@@ -46,15 +46,6 @@
             maxlength="10"
             label="重复密码"
             type="password"
-            :has-border="false"
-          />
-        </div>
-        <div class="item">
-          <nut-textinput
-            placeholder="请输入邀请码"
-            v-model="invitCode"
-            maxlength="4"
-            label="邀请码"
             :has-border="false"
           />
         </div>
@@ -96,7 +87,7 @@
 </template>
 
 <script>
-import { register } from "@/axios/api";
+import { forget } from "@/axios/api";
 import Identify from "@/components/identify";
 
 export default {
@@ -108,12 +99,10 @@ export default {
       pwd: null,
       pwd2: null,
       code: null,
-      code2: null,
-      invitCode: null
+      code2: null
     };
   },
   created() {
-    this.invitCode = this.$route.query.invitCode;
     this.setCode();
   },
   methods: {
@@ -132,13 +121,13 @@ export default {
       try {
         if (!this.nickname) throw "昵称必填";
         if (!this.phone) throw "手机号必填";
-        if (!this.pwd) throw "密码必填";
-        if (!this.pwd2) throw "重复密码必填";
+        if (!this.pwd) throw "新密码必填";
+        if (!this.pwd2) throw "重复新密码必填";
         if (!this.code2) throw "验证码必填";
         if (this.code != this.code2) throw "验证码错误";
         if (!/^[1][0-9]{10}$/.test(this.phone)) throw "手机号不正确";
-        if (this.pwd.length < 6) throw "密码最短为6位";
-        if (this.pwd != this.pwd2) throw "重复密码错误";
+        if (this.pwd.length < 6) throw "新密码最短为6位";
+        if (this.pwd != this.pwd2) throw "重复新密码错误";
       } catch (e) {
         this.$toast.fail(e);
         return false;
@@ -149,13 +138,12 @@ export default {
     // 提交
     async submit() {
       if (!this.verify()) return;
-      await register({
+      await forget({
         phone: this.phone,
         nickname: this.nickname,
-        password: this.pwd,
-        invitCode: this.invitCode
+        password: this.pwd
       });
-      this.$toast.success("注册成功");
+      this.$toast.success("操作成功");
       setTimeout(() => {
         this.$router.push({ name: "login" });
       }, 2000);
@@ -169,7 +157,7 @@ export default {
   background: rgba(0, 0, 0, 0);
 }
 
-.register {
+.forget {
   padding: 20px;
 
   .title {

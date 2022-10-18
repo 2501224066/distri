@@ -9,6 +9,7 @@ import Article from "@/page/article";
 import Bill from "@/page/bill";
 import With from "@/page/with";
 import Bank from "@/page/bank";
+import Forget from "@/page/forget";
 
 Vue.use(Router);
 
@@ -59,6 +60,11 @@ export default new Router({
       path: "/bank",
       name: "bank",
       component: Bank
+    },
+    {
+      path: "/forget",
+      name: "forget",
+      component: Forget
     }
   ]
 });

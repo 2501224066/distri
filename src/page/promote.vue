@@ -3,6 +3,9 @@
     <nut-navbar :leftShow="false" :rightShow="false">推广二维码</nut-navbar>
 
     <div class="content">
+      <span style="margin-bottom: 20px;font-size: 16px;font-weight: 800;">
+        推广码：{{ invitCode }}
+      </span>
       <span v-if="invitCode" class="qrcode" ref="qrCodeUrl"></span>
       <span
         v-else
@@ -14,8 +17,9 @@
         "
         >请先登录</span
       >
+
       <span style="margin-top: 20px" @click="show = true">
-        <span style=" font-size: 16px;font-weight: 800;margin-right:6px">
+        <span style="font-size: 16px;font-weight: 800;margin-right:6px">
           推广规则
         </span>
         <nut-icon size="19px" type="action" color="#f0250f"> </nut-icon>
@@ -25,19 +29,8 @@
     <nut-actionsheet :is-visible="show" @close="show = !show">
       <div slot="custom" class="custom-wrap">
         <div class="memo">推广规则</div>
-        <div style="padding: 10px">
-          <h3>
-            佣金结算制度
-          </h3>
-          <h4>静态收入: 5%</h4>
-          <p>按入金数额每月5%结算，比如投资1万美金，每月利润500美金。</p>
-          <h4>动态收入: 分两级</h4>
-          <p>
-            1.每直接推荐1个会员入金，按投资份额每月奖励3%，比如直推会员投资1万美金，每月分享奖励300美金
-          </p>
-          <p>
-            2.第二级按投资份额每月奖励2%，比如第二级会员入金1万美金，每月分享奖励200美金。
-          </p>
+        <div style="padding: 10px  10px 5vh 10px;white-space: pre-line;">
+          {{ invitRemark }}
         </div>
       </div>
     </nut-actionsheet>
@@ -49,12 +42,14 @@
 <script>
 import QRCode from "qrcodejs2";
 import Tabbar from "@/components/tabbar";
+import { setting } from "@/axios/api";
 
 export default {
   components: { Tabbar },
   data() {
     return {
       show: false,
+      invitRemark: null,
       invitCode: sessionStorage.getItem("userInfo")
         ? JSON.parse(sessionStorage.getItem("userInfo")).invitCode
         : null
@@ -62,8 +57,14 @@ export default {
   },
   mounted() {
     this.setCode();
+    this.getSetting();
   },
   methods: {
+    async getSetting() {
+      let res = await setting();
+      this.invitRemark = res.invitRemark;
+    },
+
     // 创建二维码
     setCode() {
       if (!sessionStorage.getItem("loginStatus")) return;

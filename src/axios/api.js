@@ -139,3 +139,23 @@ export function banner(data, repair = "", responseType = "") {
     responseType
   });
 }
+
+// 配置
+export function setting(data, repair = "", responseType = "") {
+  return send({
+    method: "get",
+    url: "/jsonapi/setting/get" + repair,
+    data,
+    responseType
+  });
+}
+
+// 重置密码
+export function forget(data, repair = "", responseType = "") {
+  return send({
+    method: "post",
+    url: "/jsonapi/restpassword" + repair,
+    data,
+    responseType
+  });
+}

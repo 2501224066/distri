@@ -37,7 +37,7 @@ export function send(obj) {
           setTimeout(() => {
             vue.$router.push({ name: "login" });
           }, 2000);
-        } else if (res.data.ret === 500) {
+        } else if (res.data.code === 400) {
           // 接口返回错误信息
           vue.$toast.fail(res.data.msg || defaultFailMsg);
         } else {

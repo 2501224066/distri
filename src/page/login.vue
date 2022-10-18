@@ -1,54 +1,61 @@
 <template>
-  <div class="register">
-    <div class="title">
-      登录
-    </div>
+  <div>
+    <nut-navbar :leftShow="true" :rightShow="false">
+      <a slot="back-icon" @click="$router.push({ name: 'home' })">返回首页</a>
+      &nbsp;
+    </nut-navbar>
 
-    <div class="content">
-      <div class="item">
-        <nut-textinput
-          v-model="phone"
-          maxlength="11"
-          label="手机号"
-          placeholder="请输入手机号"
-          :has-border="false"
-        />
+    <div class="register">
+      <div class="title">
+        登录
       </div>
-      <div class="item">
-        <nut-textinput
-          placeholder="请输入密码"
-          v-model="pwd"
-          label="密码"
-          maxlength="10"
-          type="password"
-          :has-border="false"
-        />
-      </div>
-    </div>
-    <nut-button block shape="circle" style="margin-top:50px" @click="submit">
-      提交
-    </nut-button>
 
-    <div
-      style="display: flex;justify-content: space-between;margin-top: 50px;color: #f0250f"
-    >
-      <div
-        @click="
-          () => {
-            this.$router.push({ name: 'register' });
-          }
-        "
-      >
-        前往注册
+      <div class="content">
+        <div class="item">
+          <nut-textinput
+            v-model="phone"
+            maxlength="11"
+            label="手机号"
+            placeholder="请输入手机号"
+            :has-border="false"
+          />
+        </div>
+        <div class="item">
+          <nut-textinput
+            placeholder="请输入密码"
+            v-model="pwd"
+            label="密码"
+            maxlength="10"
+            type="password"
+            :has-border="false"
+          />
+        </div>
       </div>
+      <nut-button block shape="circle" style="margin-top:50px" @click="submit">
+        提交
+      </nut-button>
+
       <div
-        @click="
-          () => {
-            this.$router.push({ name: 'promote' });
-          }
-        "
+        style="display: flex;justify-content: space-between;margin-top: 50px;color: #f0250f"
       >
-        返回首页
+        <div
+          @click="
+            () => {
+              this.$router.push({ name: 'forget' });
+            }
+          "
+        >
+          忘记密码
+        </div>
+        <div
+          @click="
+            () => {
+              this.$router.push({ name: 'register' });
+            }
+          "
+        >
+          前往注册
+        </div>
       </div>
     </div>
   </div>
@@ -105,6 +112,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/.nut-navbar {
+  background: rgba(0, 0, 0, 0);
+}
+
 .register {
   padding: 20px;
 

@@ -27,7 +27,7 @@
             :name="index + 1"
           >
             <div>注册时间：{{ item.createTime }}</div>
-            <div>联系方式：{{ item.invitPhone }}</div>
+            <div>联系方式：{{ item.memberPhone }}</div>
           </nut-collapse-item>
         </nut-collapse>
 
