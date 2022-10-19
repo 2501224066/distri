@@ -98,8 +98,8 @@
           <nut-textinput
             style="margin-bottom:10px"
             v-model="bankModal.name"
-            label="银行名称："
-            placeholder="请输入银行名称"
+            label="用户名称："
+            placeholder="请输入用户名称"
             :has-border="false"
           />
           <nut-textinput
@@ -222,9 +222,9 @@
           <nut-textinput
             style="margin-bottom:10px"
             v-model="outModal.bankName"
-            label="银行名称："
+            label="用户名称："
             @click="outModal.bankCodeShow = true"
-            placeholder="请输入银行名称"
+            placeholder="请输入用户名称"
             :has-border="false"
           />
           <nut-textinput
