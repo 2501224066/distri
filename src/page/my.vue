@@ -423,6 +423,11 @@ export default {
         this.$toast.fail("请将表单填写完全");
         return;
       }
+      if (+this.outModal.num > +this.userInfo.balance + this.userInfo.welfare) {
+        this.outModal.show = false;
+        this.$toast.fail("出金金额超出");
+        return;
+      }
       await out({
         amount: this.outModal.num,
         bank: this.outModal.bankName,
