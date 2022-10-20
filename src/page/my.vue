@@ -408,6 +408,7 @@ export default {
       });
       this.insertModal.num = null;
       this.insertModal.imgs = [];
+      this.insertModal.show = false;
       this.$toast.success("操作成功");
     },
 
