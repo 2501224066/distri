@@ -237,8 +237,8 @@
           <nut-textinput
             style="margin-bottom:10px"
             v-model="outModal.bankMan"
-            label="持卡人："
-            placeholder="请输入持卡人"
+            label="用户电话："
+            placeholder="请输入用户电话"
             :has-border="false"
           />
           <nut-textinput
