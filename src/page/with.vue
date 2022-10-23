@@ -19,20 +19,25 @@
       :threshold="200"
     >
       <div class="content">
-        <nut-collapse v-model="activeNames">
-          <nut-collapse-item
-            v-for="(item, index) in list"
-            :key="index"
-            :title="item.memberName"
-            :name="index + 1"
-          >
-            <div>注册时间：{{ item.createTime }}</div>
-            <div>联系方式：{{ item.memberPhone }}</div>
-          </nut-collapse-item>
-        </nut-collapse>
-
-        <nut-backtop :distance="400"> </nut-backtop>
+        <div class="li" style="color:#f0250f">
+          <div>
+            账户
+          </div>
+          <div>自购</div>
+          <div>团队</div>
+        </div>
+        <div v-if="list.length == 0" class="none">暂无数据</div>
+        <div class="li" v-else v-for="(item, index) in list" :key="index">
+          <div>
+            {{ item.memberName }}
+            {{ item.memberPhone }}
+          </div>
+          <div>{{ item.balance }}</div>
+          <div>{{ item.teamBalance }}</div>
+        </div>
       </div>
+
+      <nut-backtop :distance="400"> </nut-backtop>
     </nut-infiniteloading>
   </div>
 </template>
@@ -44,7 +49,6 @@ export default {
   data() {
     return {
       isLoading: false,
-      activeNames: [],
       list: [],
       page: {
         num: 1,
@@ -79,7 +83,25 @@ export default {
 <style lang="less" scoped>
 .content {
   width: 92%;
-  margin: 20px 4%;
+  margin: 10px 4%;
   border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 2px solid rgb(240, 243, 254);
+  font-size: 14px;
+  .li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 40px;
+    border-bottom: 1px solid #ddd;
+    div {
+      width: 33.3%;
+      text-align: center;
+    }
+  }
 }
 </style>

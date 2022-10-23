@@ -19,35 +19,32 @@
       :threshold="200"
     >
       <div class="content">
-        <nut-collapse v-model="activeNames">
-          <nut-collapse-item
-            v-for="(item, index) in list"
-            :key="index"
-            :title="
-              '【' +
-                item.createTime.substr(0, 10) +
-                '】&nbsp;&nbsp;&nbsp;&nbsp;' +
-                (item.debit == 0 ? '+ ' : '- ') +
-                (+item.credit + item.debit).toString()
-            "
-            :name="index + 1"
-          >
-            <div>
-              账单类型：{{
-                {
-                  RECHARGE: "入金",
-                  WITHDRAW: "出金",
-                  IVIDEND: "收益",
-                  ADMIN_RECHARGE: "系统增加",
-                  ADMIN_CHANGE_BACK: "系统扣除"
-                }[item.type]
-              }}
-            </div>
-            <div>金额：{{ +item.debit + item.credit }}</div>
-            <div>时间：{{ item.createTime }}</div>
-            <div>状态：{{ item.statusName }}</div>
-          </nut-collapse-item>
-        </nut-collapse>
+        <div class="li" style="color:#f0250f">
+          <div>
+            金额
+          </div>
+          <div>类型</div>
+          <div>状态</div>
+        </div>
+        <div v-if="list.length == 0" class="none">暂无数据</div>
+        <div class="li" v-else v-for="(item, index) in list" :key="index">
+          <div>
+            {{ item.debit == 0 ? "+ " : "- " }}
+            {{ +item.credit + item.debit }}
+          </div>
+          <div>
+            {{
+              {
+                RECHARGE: "充值",
+                WITHDRAW: "提现",
+                DIVIDEND: "分红",
+                ADMIN_RECHARGE: "后台充值",
+                ADMIN_CHANGE_BACK: "后台扣费"
+              }[item.type]
+            }}
+          </div>
+          <div>{{ item.statusName }}</div>
+        </div>
 
         <nut-backtop :distance="400"> </nut-backtop>
       </div>
@@ -62,7 +59,6 @@ export default {
   data() {
     return {
       isLoading: false,
-      activeNames: [],
       list: [],
       page: {
         num: 1,
@@ -97,7 +93,25 @@ export default {
 <style lang="less" scoped>
 .content {
   width: 92%;
-  margin: 20px 4%;
+  margin: 10px 4%;
   border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 2px solid rgb(240, 243, 254);
+  font-size: 14px;
+  .li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 40px;
+    border-bottom: 1px solid #ddd;
+    div {
+      width: 33.3%;
+      text-align: center;
+    }
+  }
 }
 </style>

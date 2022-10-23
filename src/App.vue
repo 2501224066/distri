@@ -23,4 +23,12 @@ body {
   padding: 0;
   background: rgba(248, 252, 255, 1);
 }
+
+.none {
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+}
 </style>

@@ -25,7 +25,7 @@
         <div class="box">
           <div class="item">
             <div>{{ userInfo.balance }}</div>
-            <div class="tag">本金</div>
+            <div class="tag">余额</div>
           </div>
           <div class="item">
             <div>{{ userInfo.welfare }}</div>
@@ -103,6 +103,8 @@
             :has-border="false"
           />
           <nut-textinput
+            type="number"
+            maxlength="19"
             style="margin-bottom:10px"
             v-model="bankModal.code"
             label="账户号："
@@ -114,13 +116,6 @@
             v-model="bankModal.man"
             label="持卡人："
             placeholder="请输入持卡人"
-            :has-border="false"
-          />
-          <nut-textinput
-            style="margin-bottom:10px"
-            v-model="bankModal.remark"
-            label="备注："
-            placeholder="请输入备注"
             :has-border="false"
           />
           <nut-button
@@ -423,7 +418,7 @@ export default {
         this.$toast.fail("请将表单填写完全");
         return;
       }
-      if (+this.outModal.num > +this.userInfo.balance + this.userInfo.welfare) {
+      if (+this.outModal.num > +this.userInfo.balance) {
         this.outModal.show = false;
         this.$toast.fail("出金金额超出");
         return;
