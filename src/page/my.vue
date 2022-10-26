@@ -224,7 +224,6 @@
             :has-border="false"
           />
           <nut-textinput
-            type="number"
             style="margin-bottom:10px"
             v-model="outModal.bankCode"
             label="账户号："
