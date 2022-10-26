@@ -25,6 +25,7 @@
           </div>
           <div>类型</div>
           <div>状态</div>
+          <div>时间</div>
         </div>
         <div v-if="list.length == 0" class="none">暂无数据</div>
         <div class="li" v-else v-for="(item, index) in list" :key="index">
@@ -44,6 +45,7 @@
             }}
           </div>
           <div>{{ item.statusName }}</div>
+          <div>{{ item.createTime.substr(0, 10) }}</div>
         </div>
 
         <nut-backtop :distance="400"> </nut-backtop>
@@ -109,7 +111,7 @@ export default {
     min-height: 40px;
     border-bottom: 1px solid #ddd;
     div {
-      width: 33.3%;
+      width: 25%;
       text-align: center;
     }
   }
