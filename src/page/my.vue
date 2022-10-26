@@ -11,12 +11,12 @@
           <div>
             <div>{{ userInfo.nickname }}</div>
 
-            <div
+            <!-- <div
               style="font-size: 14px;font-weight: normal;margin-top: 6px;color:#2B86C5"
               @click="bankModal.show = true"
             >
               新增账户
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -47,6 +47,7 @@
         <div>账单</div>
         <nut-icon type="right" size="20px" color="#999"> </nut-icon>
       </div>
+      <!--       
       <div
         class="item"
         @click="
@@ -58,6 +59,7 @@
         <div>账户列表</div>
         <nut-icon type="right" size="20px" color="#999"> </nut-icon>
       </div>
+-->
       <div
         class="item"
         @click="
@@ -218,11 +220,11 @@
             style="margin-bottom:10px"
             v-model="outModal.bankName"
             label="用户名称："
-            @click="outModal.bankCodeShow = true"
             placeholder="请输入用户名称"
             :has-border="false"
           />
           <nut-textinput
+            type="number"
             style="margin-bottom:10px"
             v-model="outModal.bankCode"
             label="账户号："
@@ -230,6 +232,7 @@
             :has-border="false"
           />
           <nut-textinput
+            type="number"
             style="margin-bottom:10px"
             v-model="outModal.bankMan"
             label="用户电话："
